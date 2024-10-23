@@ -1,5 +1,6 @@
 import express, { Application, Request, Response } from "express";
-import cors from "cors";
+import cors from "cors"
+import { connectDB } from "./database/connection";
 
 export class Server {
   private app: Application;
@@ -13,7 +14,9 @@ export class Server {
     this.app = express();
     this.port = process.env.PORT || "8001";
 
-    this.api();
+    connectDB(); //Conection with database
+
+    this.middlewares(); //Methods inicialization
   };
 
   api(){
@@ -27,12 +30,14 @@ export class Server {
   middlewares() {
     this.app.use(cors());
     this.app.use(express.json());
-    this.middlewares(); //Methods inicialization
+    this.api();
+
+    
 
   }
   listen():void {
     this.app.listen(this.port, () => {
-      console.log(`Servidor corriendo en el puerto ${this.port}`);
+      console.log(`Servidor corriendo en el puerto`,this.port);
     })
   }
 };
